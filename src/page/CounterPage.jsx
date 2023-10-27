@@ -1,46 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IncrementCounter, DecrementCounter, GetData } from "../redux/actions";
+import { fetchedData } from "../redux/reducers/CounterSlice";
 import "./CounterPage.css";
-import ButtonCounter from "../components/counterButton/CounterButton";
+import ListItems from "../components/ListItems/ListItems";
 
 function CounterPage() {
-  const count = useSelector((state) => state);
+  const listItems = useSelector((state) => state.list);
+  const status = useSelector((state) => state.status);
+  const error = useSelector((state) => state.error);
   const dispatch = useDispatch();
 
-  const middleware = () => {
-    dispatch(IncrementCounter());
-  };
+  useEffect(() => {
+    dispatch(fetchedData());
+  }, []);
 
-  async function apiMiddleware(dispatch) {
-    const responseData = await fetch(
-      "https://jsonplaceholder.typicode.com/users/2"
-    );
-    const data = await responseData.json();
-    dispatch(GetData(data.name));
+  if (status === "loading") {
+    return <p className="error">Loading...</p>;
+  }
+  if (status === "failed") {
+    return <p className="error">Error: {error}</p>;
   }
 
   return (
-    <div className="counterContainer">
-      {count.userData !== "" ? <h1>Counter:{count?.userData}</h1> : ""}
-      <p>{count.count}</p>
-      <div className="buttonContainer">
-        <ButtonCounter
-          value={"Increase"}
-          className={"buttons"}
-          onclick={() => dispatch(middleware)}
-        />
-        <ButtonCounter
-          value={"Decrease"}
-          className={"buttons"}
-          onclick={() => dispatch(DecrementCounter())}
-        />
-        <ButtonCounter
-          value={"Get Data"}
-          className={"buttons"}
-          onclick={() => dispatch(apiMiddleware)}
-        />
-      </div>
+    <div className="apiContainer">
+      <h1>Api Data</h1>
+      <ul>
+        {listItems.map((each) => (
+          <ListItems key={each.id} values={each} />
+        ))}
+      </ul>
     </div>
   );
 }
