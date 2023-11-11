@@ -1,0 +1,26 @@
+* {
+  margin: 0px;
+}
+
+.apiContainer {
+  height: 100vh;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Arial";
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
